@@ -1,14 +1,26 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+// SPDX-License-Identifier: MIT
 
-contract Counter {
-    uint256 public number;
+pragma solidity ^0.8.0;
 
-    function setNumber(uint256 newNumber) public {
-        number = newNumber;
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+
+contract SepoliaUSDToETHPriceFeed {
+    AggregatorV3Interface internal priceFeed;
+
+    /**
+     * Network: Ethereum Mainnet
+     * Aggregator: SEPOLIA / USD
+     * Address: 0x694AA1769357215DE4FAC081bf1f309aDC325306
+     */
+    constructor() {
+        priceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
     }
 
-    function increment() public {
-        number++;
+    /**
+     * Returns the latest price of SEPOLIA USD to ETH
+     */
+    function getLatestPrice() public view returns (int256) {
+        (, int256 price, , , ) = priceFeed.latestRoundData();
+        return price;
     }
 }
