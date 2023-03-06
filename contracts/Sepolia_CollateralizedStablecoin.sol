@@ -12,11 +12,13 @@ contract CollateralizedStablecoin is ERC20, Ownable {
     uint8 public tax;
     DataFeedSepolia public priceFeed;
     uint256 private taxAmount;
+    uint256 public supplyCap;
     
     constructor () ERC20 ("Neon", "NEO") {
         priceFeed = new DataFeedSepolia();
-        ratio = 2;
+        ratio = 1;
         tax = 1;
+        supplyCap = 1000000;
     }
 
     event newDeposit (address indexed from, uint256 amount, uint256 exchange);
@@ -28,11 +30,16 @@ contract CollateralizedStablecoin is ERC20, Ownable {
      * @param _amount of dollars (USD) you want to stake
      */
     function depositCollateral(uint256 _amount) public payable {
-        require(_amount > 0, "Amount must be greater than 0");
+        uint256 tokensToMint = _amount * 10 ** 18 * ratio;
+        
+        require(_amount > 0 && tokensToMint <= supplyCap, "Amount must be greater than 0 and lower and equal to supplyCap");
+        
         uint256 exchangeRate = uint256(priceFeed.getLatestPrice());
         uint256 price = _getExchangeRate(_amount, exchangeRate);
+        
         require(price <= msg.value, "Value not enough");
-        _mint(msg.sender, _amount * 10 ** 18 * ratio);
+        
+        _mint(msg.sender, tokensToMint);
 
         emit newDeposit(msg.sender, _amount, exchangeRate);
 
