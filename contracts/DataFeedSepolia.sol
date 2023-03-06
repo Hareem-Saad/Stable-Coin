@@ -8,8 +8,8 @@ contract DataFeedSepolia {
     AggregatorV3Interface internal priceFeed;
 
     /**
-     * Network: Ethereum Mainnet
-     * Aggregator: SEPOLIA / USD
+     * Network: Sepolia
+     * Aggregator: ETH / USD
      * Address: 0x694AA1769357215DE4FAC081bf1f309aDC325306
      */
     constructor() {
