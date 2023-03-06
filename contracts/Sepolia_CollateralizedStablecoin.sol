@@ -18,7 +18,7 @@ contract CollateralizedStablecoin is ERC20, Ownable {
         priceFeed = new DataFeedSepolia();
         ratio = 1;
         tax = 1;
-        supplyCap = 1000000;
+        supplyCap = 1000000 * 10 ** 18;
     }
 
     event newDeposit (address indexed from, uint256 amount, uint256 exchange);
