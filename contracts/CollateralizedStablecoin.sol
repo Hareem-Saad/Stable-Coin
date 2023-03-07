@@ -11,10 +11,12 @@ contract CollateralizedStablecoin is ERC20, Ownable {
     uint8 public tax;
     uint256 public priceFeed = 1000; //so i can run it on localhost
     uint256 private taxAmount;
+    uint256 public supplyCap;
     
     constructor () ERC20 ("Neon", "NEO") {
-        ratio = 2;
+        ratio = 1;
         tax = 1;
+        supplyCap = 1000000 * 10 ** 18;
     }
 
     event newDeposit (address indexed from, uint256 amount, uint256 exchange);
@@ -27,9 +29,11 @@ contract CollateralizedStablecoin is ERC20, Ownable {
      */
     function depositCollateral(uint256 _amount) public payable {
         require(_amount > 0, "Amount must be greater than 0");
+        uint256 tokensToMint = _amount * 10 ** 18 * ratio;
+        require(_amount > 0 && tokensToMint <= supplyCap, "Amount must be greater than 0 and lower and equal to supplyCap");
         uint256 price = getExchangeRate(_amount);
         require(price <= msg.value, "Value not enough");
-        _mint(msg.sender, _amount * 10 ** 18 * ratio);
+        _mint(msg.sender, tokensToMint);
 
         emit newDeposit(msg.sender, _amount, priceFeed);
 
