@@ -4,18 +4,18 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./DataFeedSepolia.sol";
+import "./DataFeedGoerli.sol";
 
 contract CollateralizedStablecoin is ERC20, Ownable {
 
     uint8 public ratio;
     uint8 public tax;
-    DataFeedSepolia public priceFeed;
+    DataFeedGoerli public priceFeed;
     uint256 private taxAmount;
     uint256 public supplyCap;
     
     constructor () ERC20 ("Neon", "NEO") {
-        priceFeed = new DataFeedSepolia();
+        priceFeed = new DataFeedGoerli();
         ratio = 1;
         tax = 1;
         supplyCap = 1000000 * 10 ** 18;
